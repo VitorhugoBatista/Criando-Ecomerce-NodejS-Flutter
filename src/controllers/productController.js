@@ -28,7 +28,7 @@ class ProductController {
   getProductById = async (req, res) => {
     try {
       const { id } = req.params;
-      const productDetails = await productService.productById(id);
+      const productDetails = await productById(id);
       res.status(200).json({
         status: true,
         data: productDetails,

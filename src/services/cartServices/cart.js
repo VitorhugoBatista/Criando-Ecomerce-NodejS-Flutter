@@ -1,6 +1,6 @@
 import Cart from "../../models/cart.js";
 
- const cart = async () => {
+ async function cart() {
   const carts = await Cart.find().populate({
     path: 'items.productId',
     select: 'name price total',

@@ -4,10 +4,19 @@
 /* eslint-disable linebreak-style */
 import { Router } from 'express';
 import ProductController from '../controllers/productController.js';
+import CartController from '../controllers/cartController.js';
 
 const routes = Router();
 
+//products routes//
 routes.get('/products', ProductController.getProducts);
-routes.get('products/:id', ProductController.getProductById);
-routes.delete('products/:id', ProductController.removeProduct);
+routes.get('/products/:id', ProductController.getProductById);
+routes.delete('/products/:id', ProductController.removeProduct);
+
+//cart routes//
+
+routes.post('/cart', CartController.addItemToCart);
+routes.get('/cart', CartController.getCart);
+routes.delete('/cart/empty-cart', CartController.emptyCart);
+
 export default routes;
