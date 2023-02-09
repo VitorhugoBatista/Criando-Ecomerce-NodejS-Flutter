@@ -1,8 +1,11 @@
+/* eslint-disable import/no-duplicates */
+/* eslint-disable linebreak-style */
+// eslint-disable-next-line import/no-duplicates
 import mongoose from 'mongoose';
 import { Schema } from 'mongoose';
 
 const ItemSchema = new Schema({
-  productId: {
+  id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product',
   },
@@ -11,7 +14,7 @@ const ItemSchema = new Schema({
     required: true,
     min: [1, 'Quantity can not be less then 1.'],
   },
-  price: {
+  preco: {
     type: Number,
     required: true,
   },

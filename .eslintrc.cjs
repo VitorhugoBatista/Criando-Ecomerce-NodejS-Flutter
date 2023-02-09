@@ -1,8 +1,8 @@
 module.exports = {
   env: {
     node: true,
-    browser: false,
-    es2021: true,
+    browser: true,
+    es2021: false,
   },
   extends: 'airbnb-base',
   overrides: [
@@ -12,5 +12,7 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    eqeqeq: 'off',
+    'no-console': 'off',
   },
 };
