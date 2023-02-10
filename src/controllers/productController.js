@@ -1,3 +1,6 @@
+/* eslint-disable max-len */
+/* eslint-disable indent */
+/* eslint-disable import/extensions */
 /* eslint-disable arrow-parens */
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-shadow */
@@ -5,71 +8,76 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-console */
 /* eslint-disable linebreak-style */
-import axios from 'axios';
 
+// eslint-disable-next-line import/no-cycle
 import mongoose from 'mongoose';
-import qs, { stringify } from 'qs';
-import productById from '../services/productServices/productById.js';
-import products from '../services/productServices/products.js';
-import removeProduct from '../services/productServices/removeProduct.js';
+// eslint-disable-next-line import/no-cycle
+import fetchProducts from '../services/productServices/fetchProducts.js';
+
 
 mongoose.set('strictQuery', true);
 
 class ProductController {
   getProducts = async (req, res) => {
     try {
-      const responseBR = await axios.get('http://616d6bdb6dacbb001794ca17.mockapi.io/devnology/brazilian_provider');
-      const responseEU = await axios.get('http://616d6bdb6dacbb001794ca17.mockapi.io/devnology/european_provider');
-      if (responseBR.status === 200 && responseEU.status === 200) {
-        const EUProducts = (responseEU.data).map(product => {
-          return {
-            productId: product.id,
-            productName: product.name,
-            productPrice: product.price,
-            productDescription: product.description,
-            productMaterial: product.details.material,
-            productAdjective: product.details.adjective,
-            productImagepath: product.gallery[0],
-            hasdisCount: product.hasDiscount,
-            discountValue: product.discountValue,
-            finalPrice: (product.price - product.discountValue * product.price),
-            supplier: 'EUSupplier',
-          };
-        });
-        const BRProducts = (responseBR.data).map(product => {
-          return {
-            productId: product.id,
-            productName: product.nome,
-            productPrice: product.preco,
-            productDescription: product.descricao,
-            productMaterial: product.material,
-            productAdjective: product.departamento,
-            productImagepath: product.imagem,
-            hasdisCount: 'false',
-            discountValue: '0',
-            finalPrice: product.preco,
-            supplier: 'BRSupplier',
-          };
-        });
-        const listFinal = [...EUProducts, ...BRProducts];
-        res.send(listFinal);
-      }
+      const produtos = await fetchProducts;
+      res.status(200).json(produtos);
     } catch (err) {
-      res.send({ message: 'something goes wrong with products fetch' });
+      res.send({ err });
     }
   };
 
   getProductById = async (req, res) => {
     try {
+    const listfinal = await fetchProducts;
       const { id } = req.params;
-      const productDetails = await productById(id);
-      res.status(200).json({
-        status: true,
-        data: productDetails,
-      });
+      const filteredProducts = listfinal.filter(product => product.productId === id);
+      console.log(filteredProducts);
+      res.status(200).json(
+        filteredProducts,
+      );
     } catch (err) {
+      console.log(err);
       res.status(500).json({
-        status: false,
+        status: 'not finded',
+        error: err,
+      });
+    }
+  };
+
+  getProductByName = async (req, res) => {
+    try {
+      const listfinal = await fetchProducts;
+         console.log(req.params);
+      const { productname } = req.params;
+      const filteredProducts = listfinal.filter(product => product.productName.toLowerCase().includes(productname));
+      console.log(filteredProducts);
+      res.status(200).json(
+        filteredProducts,
+      );
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        status: 'not finded',
+        error: err,
+      });
+    }
+  };
+
+  getProductByCategory = async (req, res) => {
+    try {
+      const listfinal = await fetchProducts;
+         console.log(req.params);
+      const { productcategory } = req.params;
+      const filteredProducts = listfinal.filter(product => product.productMaterial.toLowerCase().includes(productcategory));
+      console.log(filteredProducts);
+      res.status(200).json(
+        filteredProducts,
+      );
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        status: 'not found',
         error: err,
       });
     }

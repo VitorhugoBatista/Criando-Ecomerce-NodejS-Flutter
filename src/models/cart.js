@@ -5,9 +5,8 @@ import mongoose from 'mongoose';
 import { Schema } from 'mongoose';
 
 const ItemSchema = new Schema({
-  id: {
+  Orderid: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product',
   },
   quantity: {
     type: Number,
